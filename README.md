@@ -1,5 +1,5 @@
 # Bashar Audiobook Creator
-Creates an audiobook based on Bashar monologes.
+Creates an audiobook based on Bashar audio files.
 
 This command line tool does the following steps:
 * Enumerates all audio files in a given folder
