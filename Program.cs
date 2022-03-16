@@ -335,6 +335,7 @@ namespace BasharTools.AudiobookCreator
                 string ffmpegCompilationCommandLine = $"{config.FFMPEG.Compilation}";
                 ffmpegCompilationCommandLine = ffmpegCompilationCommandLine.Replace("%inputfiles%", Path.Combine(config.TempDirectory, "chapterfilelist.txt"));
                 ffmpegCompilationCommandLine = ffmpegCompilationCommandLine.Replace("%metadatafile%", Path.Combine(config.TempDirectory, "FFMETADATA.txt"));
+                ffmpegCompilationCommandLine = ffmpegCompilationCommandLine.Replace("%coverfile%", Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), config.Metadata.Cover));
                 ffmpegCompilationCommandLine = ffmpegCompilationCommandLine.Replace("%outputfile%", outputFilename);
 
                 logger.LogDebug($"Running 'ffmpeg {ffmpegCompilationCommandLine}'...");
