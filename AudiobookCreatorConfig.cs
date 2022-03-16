@@ -31,11 +31,12 @@ namespace BasharTools.AudiobookCreator
             {
                 Cover = config["Metadata:Cover"],
                 Title = config["Metadata:Title"],
-                Author = config["Metadata:Author"],
+                Artist = config["Metadata:Artist"],
                 Album = config["Metadata:Album"],
                 Year = config["Metadata:Year"],
                 Genre = config["Metadata:Genre"],
-                Description = config["Metadata:Description"]
+                Description = config["Metadata:Description"],
+                Language = config["Metadata:Language"]
             };            
         }        
     }
@@ -50,10 +51,11 @@ namespace BasharTools.AudiobookCreator
     {
         public string Cover { get; set; }
         public string Title { get; set; }
-        public string Author { get; set; }
+        public string Artist { get; set; }
         public string Album { get; set; }
         public string Year { get; set; }
         public string Genre { get; set; }
         public string Description { get; set; }
+        public string Language { get; set; }
     }
 }

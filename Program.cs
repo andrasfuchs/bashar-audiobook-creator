@@ -301,9 +301,9 @@ namespace BasharTools.AudiobookCreator
 
                 sb.Clear();
                 sb.AppendLine(";FFMETADATA1");
-                sb.AppendLine($"author={config.Metadata.Author}");
-                sb.AppendLine($"artist={config.Metadata.Author}");
-                sb.AppendLine($"album_artist={config.Metadata.Author}");
+                sb.AppendLine($"author={config.Metadata.Artist}");
+                sb.AppendLine($"artist={config.Metadata.Artist}");
+                sb.AppendLine($"album_artist={config.Metadata.Artist}");
                 sb.AppendLine($"title={config.Metadata.Title}");
                 sb.AppendLine($"album={config.Metadata.Album}");
                 sb.AppendLine($"year={config.Metadata.Year}");
@@ -311,6 +311,7 @@ namespace BasharTools.AudiobookCreator
                 sb.AppendLine($"genre={config.Metadata.Genre}");
                 sb.AppendLine($"description={config.Metadata.Description}");
                 sb.AppendLine($"comment={config.Metadata.Description}");
+                sb.AppendLine($"language={config.Metadata.Language}");
                 foreach (AudiobookChapterEntry audiobookChapterEntry in audiobookChapters)
                 {
                     sb.AppendLine("");
