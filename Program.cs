@@ -251,7 +251,7 @@ namespace BasharTools.AudiobookCreator
                     audiobookChapters[acIndex].AudioInputFile = audioFileCache.FirstOrDefault(af => af.Filename == audiobookChapters[acIndex].Filename);
                     audiobookChapters[acIndex].OutputFilename = $"{audiobookChapters[acIndex].Index.ToString("0000")}.m4a";
                 }
-               
+
 
                 // Convert the audio files
                 foreach (AudiobookChapterEntry audiobookChapterEntry in audiobookChapters)
@@ -259,30 +259,35 @@ namespace BasharTools.AudiobookCreator
                     logger.LogInformation($"Converting '{audiobookChapterEntry.Filename}', please wait.");
 
                     string ffmpegConversionCommandLine = $"{config.FFMPEG.Conversion}";
-                        ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%inputfile%", audiobookChapterEntry.AudioInputFile.FullPath);
-                        ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%outputfile%", Path.Combine(config.TempDirectory, audiobookChapterEntry.OutputFilename));
-                        ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%starttime%", audiobookChapterEntry.StartTime);
-                        ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%stoptime%", audiobookChapterEntry.StopTime);
+                    ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%inputfile%", audiobookChapterEntry.AudioInputFile.FullPath);
+                    ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%outputfile%", Path.Combine(config.TempDirectory, audiobookChapterEntry.OutputFilename));
+                    ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%starttime%", audiobookChapterEntry.StartTime);
+                    ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%stoptime%", audiobookChapterEntry.StopTime);
 
-                        logger.LogDebug($"Running 'ffmpeg {ffmpegConversionCommandLine}'...");
+                    logger.LogDebug($"Running 'ffmpeg {ffmpegConversionCommandLine}'...");
 
-                        try
+                    try
+                    {
+                        var ffmpegConversion = FFmpeg.Conversions.New();
+                        ffmpegConversion.Start(ffmpegConversionCommandLine).Wait();
+                    }
+                    catch (Exception ex)
+                    {
+                        audiobookChapterEntry.ExceptionMessage = ex.Message;
+
+                        if (ex.Message.Contains(" already exists. Exiting."))
                         {
-                            var ffmpegConversion = FFmpeg.Conversions.New();
-                            ffmpegConversion.Start(ffmpegConversionCommandLine).Wait();
+                            logger.LogWarning($"File '{audiobookChapterEntry.OutputFilename}' already exists, skipping.");
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            audiobookChapterEntry.ExceptionMessage = ex.Message;
-
-                            if (ex.Message.Contains(" already exists. Exiting."))
+                            logger.LogError(ex, "Exception occured during the FFMPEG conversion.");
+                            foreach (string exceptionMessageLine in ex.Message.Split(Environment.NewLine))
                             {
-                                logger.LogWarning($"File '{audiobookChapterEntry.OutputFilename}' already exists, skipping.");
-                            } else
-                            {
-                                logger.LogError(ex, "Exception occured during the FFMPEG conversion.");
+                                logger.LogError(exceptionMessageLine);
                             }
                         }
+                    }
                 }
 
 
@@ -294,8 +299,8 @@ namespace BasharTools.AudiobookCreator
                     sb.AppendLine($"file '{audiobookChapterEntry.OutputFilename}'");
                 }
                 File.WriteAllText(Path.Combine(config.TempDirectory, "chapterfilelist.txt"), sb.ToString());
-                
-                
+
+
                 // Generate metadata file
                 double currentPositionInSeconds = 0.0;
 
@@ -347,8 +352,12 @@ namespace BasharTools.AudiobookCreator
                     ffmpegConversion.Start(ffmpegCompilationCommandLine).Wait();
                 }
                 catch (Exception ex)
-                {                    
-                    logger.LogError(ex, "Exception occured during the FFMPEG compilation.");
+                {
+                    logger.LogError("Exception occured during the FFMPEG compilation.");
+                    foreach (string exceptionMessageLine in ex.Message.Split(Environment.NewLine))
+                    {
+                        logger.LogError(exceptionMessageLine);
+                    }
                 }
 
                 logger.LogInformation($"M4B audiobook creation is completed.");
