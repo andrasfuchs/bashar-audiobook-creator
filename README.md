@@ -24,5 +24,11 @@ These chapter definitions are stored in a CSV file that has the following column
 ## Recommended audiobook player
 I recommend to use the [Smart AudioBook Player](https://play.google.com/store/apps/details?id=ak.alizandro.smartaudiobookplayer).
 
+## Compiled audiobooks
+There are a few audiobooks that were created with this tools which are available on IPFS (on the interplanetary file system).
+ * Bashar Monologe Collection 2021: [IPFS link](#)
+
 ## Contribute
-If you like this project, please consider contributing. If you found a bug or have an idea [create a new issue](https://github.com/andrasfuchs/bashar-audiobook-creator/issues/new). The best way to improve this tool is to create a pull request that I can review and merge. If you need help with forking this repo or creating a pull request with your changes, let me know.
+If you like this project, please consider contributing. 
+The easiest way to start is to edit the timecodes [in our CSV file](https://github.com/andrasfuchs/bashar-audiobook-creator/blob/main/audiobook_timecodes.csv), indicating where the monologe starts and ends in a given audio file.
+If you find a bug or have an idea [create a new issue](https://github.com/andrasfuchs/bashar-audiobook-creator/issues/new). The best way to improve this tool is to create a pull request that I can review and merge. If you need help with forking this repo or creating a pull request with your changes, let me know.
