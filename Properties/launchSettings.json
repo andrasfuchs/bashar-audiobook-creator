@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {},
+      "distributionName": ""
+    },
+    "Default": {
+      "commandName": "Project",
+      "commandLineArgs": "\"BasharAudiobook2013.m4b\""
+    }
+  }
+}
