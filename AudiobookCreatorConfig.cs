@@ -12,7 +12,7 @@ namespace BasharTools.AudiobookCreator
         public string[] AudioFileExtensions { get; }
         public string TimecodesFile { get; }
         public FFMPEGConfig FFMPEG { get; }
-        public MP4BOXConfig MP4BOX { get; }
+        public MetadataConfig Metadata { get; }
 
         public AudiobookCreatorConfig(IConfigurationRoot config)
         {
@@ -23,23 +23,37 @@ namespace BasharTools.AudiobookCreator
 
             FFMPEG = new FFMPEGConfig()
             {
-                Parameters = config["FFMPEG:Parameters"],
+                Conversion = config["FFMPEG:Conversion"],
+                Compilation = config["FFMPEG:Compilation"]
             };
 
-            MP4BOX = new MP4BOXConfig()
+            Metadata = new MetadataConfig()
             {
-                Parameters = config["MP4BOX:Parameters"]
+                Cover = config["Metadata:Cover"],
+                Title = config["Metadata:Title"],
+                Author = config["Metadata:Author"],
+                Album = config["Metadata:Album"],
+                Year = config["Metadata:Year"],
+                Genre = config["Metadata:Genre"],
+                Description = config["Metadata:Description"]
             };            
         }        
     }
 
     public class FFMPEGConfig
     {
-        public string Parameters { get; set; }
+        public string Conversion { get; set; }
+        public string Compilation { get; set; }
     }
 
-    public class MP4BOXConfig
+    public class MetadataConfig
     {
-        public string Parameters { get; set; }
+        public string Cover { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public string Album { get; set; }
+        public string Year { get; set; }
+        public string Genre { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -235,51 +235,30 @@ namespace BasharTools.AudiobookCreator
 
                 logger.LogInformation($"Scanning data directory for audio files...");
 
-                sb.Clear();
-
                 int audioFileCount = 0;
                 foreach (AudioInputFile inputAudioFile in EnumerateAudioFilesInFolder(dataDirectory))
                 {
                     audioFileCache.Add(inputAudioFile);
                     audioFileCount++;
-
-                    sb.AppendLine(Path.GetFileName(inputAudioFile.Filename));
                 }
                 sw.Stop();
                 logger.LogInformation($"{audioFileCount} files were found in the data directory in {sw.ElapsedMilliseconds:N0} ms.");
 
+                // Ignore invalid chapters
                 audiobookChapters = audiobookChapters.Where(ac => ac.IsIncluded && !String.IsNullOrEmpty(ac.StartTime) && !String.IsNullOrEmpty(ac.StopTime)).OrderBy(ac => ac.Index).ToArray();
                 for (int acIndex = 0; acIndex < audiobookChapters.Length; acIndex++)
                 {
                     audiobookChapters[acIndex].AudioInputFile = audioFileCache.FirstOrDefault(af => af.Filename == audiobookChapters[acIndex].Filename);
-                    audiobookChapters[acIndex].OutputFilename = $"{audiobookChapters[acIndex].Index.ToString("0000")} {audiobookChapters[acIndex].Chapter}.m4a";
+                    audiobookChapters[acIndex].OutputFilename = $"{audiobookChapters[acIndex].Index.ToString("0000")}.m4a";
                 }
+               
 
-                sw.Restart();
-
-                logger.LogInformation($"Converting {audiobookChapters.Length} audio files...");
-
-                int audioConversionCompleteCount = 0;
-                long audioDataBytesCoverted = 0;
-
-                Task.Run(() =>
-                {
-                    while (audioConversionCompleteCount < audiobookChapters.Length)
-                    {
-                        if (audioDataBytesCoverted > 0)
-                        {
-                            logger.LogInformation($"{(((float)audioConversionCompleteCount / audiobookChapters.Length) * 100.0f).ToString("0.0")}% of audio conversions was completed with the effective speed of {((float)audioDataBytesCoverted / (1024 * 1024)) / ((float)sw.ElapsedMilliseconds / 1000):0.0} MB/s.");
-                        }
-                        Thread.Sleep(1000);
-                    }
-                });
-
-                var tasks = new List<Task>();
+                // Convert the audio files
                 foreach (AudiobookChapterEntry audiobookChapterEntry in audiobookChapters)
                 {
-                    var task = Task.Run(() =>
-                    {
-                        string ffmpegConversionCommandLine = $"{config.FFMPEG.Parameters}";
+                    logger.LogInformation($"Converting '{audiobookChapterEntry.Filename}', please wait.");
+
+                    string ffmpegConversionCommandLine = $"{config.FFMPEG.Conversion}";
                         ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%inputfile%", audiobookChapterEntry.AudioInputFile.FullPath);
                         ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%outputfile%", Path.Combine(config.TempDirectory, audiobookChapterEntry.OutputFilename));
                         ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%starttime%", audiobookChapterEntry.StartTime);
@@ -294,34 +273,83 @@ namespace BasharTools.AudiobookCreator
                         }
                         catch (Exception ex)
                         {
-                            audiobookChapterEntry.ExceptionMessage = ex.ToString();
-                            logger.LogError(ex, "Exception occured during the FFMPEG conversion.");
+                            audiobookChapterEntry.ExceptionMessage = ex.Message;
+
+                            if (ex.Message.Contains(" already exists. Exiting."))
+                            {
+                                logger.LogWarning($"File '{audiobookChapterEntry.OutputFilename}' already exists, skipping.");
+                            } else
+                            {
+                                logger.LogError(ex, "Exception occured during the FFMPEG conversion.");
+                            }
                         }
-
-                        audioConversionCompleteCount++;
-                        audioDataBytesCoverted += audiobookChapterEntry.AudioInputFile.FileSize;
-                    });
-                    tasks.Add(task);
                 }
-                Task.WaitAll(tasks.ToArray());
-                sw.Stop();
-                logger.LogInformation($"{(((float)audioConversionCompleteCount / audiobookChapters.Length) * 100.0f).ToString("0.0")}% of audio conversions was completed with the effective speed of {((float)audioDataBytesCoverted / (1024 * 1024)) / ((float)sw.ElapsedMilliseconds / 1000):0.0} MB/s.");
 
-                int i = 0;
+
+                // Generate audio file list file
+                sb.Clear();
+                sb.AppendLine("# generated list of audio files to compile");
                 foreach (AudiobookChapterEntry audiobookChapterEntry in audiobookChapters)
                 {
-                    if (nextConsoleFeedback < DateTime.UtcNow)
-                    {
-                        logger.LogInformation($"Adding the '{audiobookChapterEntry.Chapter}' chapter to the audiobook. {(((float)i / audiobookChapters.Length) * 100.0f).ToString("0.0")}% done.");
-                        nextConsoleFeedback = DateTime.UtcNow.AddSeconds(3);
-                    }
-
-                    //foreach (float md in audioInputFile.MagnitudeData[featureColumnIndexStart..featureColumnIndexEnd])
-                    //{
-                    //    stats.Add(md);
-                    //}
-                    i++;
+                    sb.AppendLine($"file '{audiobookChapterEntry.OutputFilename}'");
                 }
+                File.WriteAllText(Path.Combine(config.TempDirectory, "chapterfilelist.txt"), sb.ToString());
+                
+                
+                // Generate metadata file
+                double currentPositionInSeconds = 0.0;
+
+                sb.Clear();
+                sb.AppendLine(";FFMETADATA1");
+                sb.AppendLine($"author={config.Metadata.Author}");
+                sb.AppendLine($"artist={config.Metadata.Author}");
+                sb.AppendLine($"album_artist={config.Metadata.Author}");
+                sb.AppendLine($"title={config.Metadata.Title}");
+                sb.AppendLine($"album={config.Metadata.Album}");
+                sb.AppendLine($"year={config.Metadata.Year}");
+                sb.AppendLine($"date={config.Metadata.Year}");
+                sb.AppendLine($"genre={config.Metadata.Genre}");
+                sb.AppendLine($"description={config.Metadata.Description}");
+                sb.AppendLine($"comment={config.Metadata.Description}");
+                foreach (AudiobookChapterEntry audiobookChapterEntry in audiobookChapters)
+                {
+                    sb.AppendLine("");
+                    sb.AppendLine("[CHAPTER]");
+                    sb.AppendLine("TIMEBASE=1/1000");
+                    sb.AppendLine($"START={(int)(currentPositionInSeconds * 1000)}");
+                    sb.AppendLine($"END={(int)((currentPositionInSeconds + audiobookChapterEntry.DurationInSeconds) * 1000)}");
+                    sb.AppendLine($"title={audiobookChapterEntry.Chapter}");
+
+                    currentPositionInSeconds += audiobookChapterEntry.DurationInSeconds;
+                }
+                File.WriteAllText(Path.Combine(config.TempDirectory, "FFMETADATA.txt"), sb.ToString());
+
+
+                logger.LogInformation($"Compiling {audiobookChapters.Length} audio files into '{outputFilename}'...");
+
+                if (File.Exists(outputFilename))
+                {
+                    File.Delete(outputFilename);
+                }
+
+                string ffmpegCompilationCommandLine = $"{config.FFMPEG.Compilation}";
+                ffmpegCompilationCommandLine = ffmpegCompilationCommandLine.Replace("%inputfiles%", Path.Combine(config.TempDirectory, "chapterfilelist.txt"));
+                ffmpegCompilationCommandLine = ffmpegCompilationCommandLine.Replace("%metadatafile%", Path.Combine(config.TempDirectory, "FFMETADATA.txt"));
+                ffmpegCompilationCommandLine = ffmpegCompilationCommandLine.Replace("%outputfile%", outputFilename);
+
+                logger.LogDebug($"Running 'ffmpeg {ffmpegCompilationCommandLine}'...");
+
+                try
+                {
+                    var ffmpegConversion = FFmpeg.Conversions.New();
+                    ffmpegConversion.Start(ffmpegCompilationCommandLine).Wait();
+                }
+                catch (Exception ex)
+                {                    
+                    logger.LogError(ex, "Exception occured during the FFMPEG compilation.");
+                }
+
+                logger.LogInformation($"M4B audiobook creation is completed.");
             }
         }
 
