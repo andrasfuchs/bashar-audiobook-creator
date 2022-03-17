@@ -17,7 +17,7 @@ namespace BasharTools.AudiobookCreator
 {
     class Program
     {
-        static string versionString = "v0.1.1 (2022-03-15)";
+        static string versionString = "v0.2.1 (2022-03-17)";
 
         static ILogger logger;
 
