@@ -152,73 +152,7 @@ namespace BasharTools.AudiobookCreator
                 csv.Context.RegisterClassMap<AudioTimecodeMap>();
                 return csv.GetRecords<AudiobookChapterEntry>().ToArray();
             }
-        }
-
-        /*
-        private static void DataAcquisition_SamplesReceived(object sender, SamplesReceivedEventArgs e)
-        {
-            if (config.AudioRecording.Enabled)
-            {
-                Task.Run(() =>
-                {
-                    TimeSpan tp = captureTime.Add(new TimeSpan(0, 0, (int)config.MP4BOX.IntervalSeconds * 2)) - DateTime.Now;
-
-                    string pathToAudioFile = GeneratePathToFile(DateTime.Now);
-
-                    string recFilename = AppendDataDir($"{pathToAudioFile}.{ffmpegAudioRecordingExtension}");
-
-                    string ffmpegAudioFramework = config.AudioRecording.PreferredDevice.Split("/")[0];
-                    string ffmpegAudioDevice = config.AudioRecording.PreferredDevice.Split("/")[1];
-                    string audioRecordingCommandLine = $"-f {ffmpegAudioFramework} -ac 1 -i audio=\"{ffmpegAudioDevice}\" {ffmpegAudioRecordingParameters} -t {tp:mm':'ss'.'fff} \"{recFilename}\"";
-                    logger.LogDebug($"ffmpeg {audioRecordingCommandLine}");
-
-                    try
-                    {
-                        FFmpeg.Conversions.New().Start(audioRecordingCommandLine)
-                            .ContinueWith((Task<IConversionResult> cr) =>
-                            {
-                                try
-                                {
-                                    Stopwatch sw = Stopwatch.StartNew();
-                                    sw.Restart();
-
-                                    float waveRms = 0;
-                                    float wavePeak = 0;
-                                    using (var waveStream = new FileStream(recFilename, FileMode.Open))
-                                    {
-                                        DiscreteSignal recordedAudio = new WaveFile(waveStream).Signals[0];
-                                        waveRms = recordedAudio.Rms();
-                                        wavePeak = Math.Max(-recordedAudio.Samples.Min(), recordedAudio.Samples.Max()) * 100;
-                                    }
-
-                                    //if (waveRms >= config.AudioRecording.SilenceThreshold)
-                                    if (wavePeak >= config.AudioRecording.SilenceThreshold)
-                                    {
-                                        string finalFilename = AppendDataDir($"{pathToAudioFile}_{wavePeak.ToString("00.0")}%.{ffmpegAudioEncodingExtension}");
-                                        string audioEncodingCommandLine = $"-i {recFilename} {ffmpegAudioEncodingParameters} \"{finalFilename}\"";
-
-                                        logger.LogDebug($"ffmpeg {audioEncodingCommandLine}");
-                                        FFmpeg.Conversions.New().Start(audioEncodingCommandLine).Wait();
-                                    }
-
-                                    File.Delete(recFilename);
-                                }
-                                catch (Exception ex)
-                                {
-                                    logger.LogWarning($"There was an error while encoding audio.");
-                                    logger.LogDebug($"{ex.Message.Split(Environment.NewLine)[^1]}");
-                                }
-                            });
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogWarning($"There was an error while recording audio.");
-                        logger.LogDebug($"{ex.Message.Split(Environment.NewLine)[^1]}");
-                    }
-                });
-            }
-        }
-        */
+        }       
 
         private static void GenerateAudiobook(AudiobookChapterEntry[] audiobookChapters, string dataDirectory, string outputFilename)
         {
