@@ -22,7 +22,18 @@ Timecodes define the chapters in the audiobook. Every chapter must be defined as
 These chapter definitions are stored in a CSV file that has the following columns: `Index`, `IsIncluded`, `Filename`, `StartTime`, `StopTime`, `Chapter`.
 
 ## Recommended audiobook player
-I recommend to use the [Smart AudioBook Player](https://play.google.com/store/apps/details?id=ak.alizandro.smartaudiobookplayer).
+I recommend to use the [Smart AudioBook Player](https://play.google.com/store/apps/details?id=ak.alizandro.smartaudiobookplayer). It's easy to use, reads the file metadata correctly and it remembers where you left last time.
+
+Audiobook selection and player screens:
+
+![image](https://user-images.githubusercontent.com/910321/158899513-55aff073-2d10-4b01-a717-7608ad83b3b4.png)
+![image](https://user-images.githubusercontent.com/910321/158899733-32472cb4-5d89-4596-a0d1-221cf996f65d.png)
+
+File and chapter selection screens:
+
+![image](https://user-images.githubusercontent.com/910321/158899416-402f6c74-ff37-4461-99dd-2a4a591d5ec4.png)
+![image](https://user-images.githubusercontent.com/910321/158899695-86be826c-4f14-475a-92dd-3e82bf914210.png)
+
 
 ## Compiled audiobooks
 There are a few audiobooks that were created with this tools which are available on IPFS (on the interplanetary file system).
