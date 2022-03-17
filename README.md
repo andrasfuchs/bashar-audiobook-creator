@@ -36,9 +36,8 @@ File and chapter selection screens:
 
 
 ## Compiled audiobooks
-There are a few audiobooks that were created with this tools which are available on IPFS (on the interplanetary file system).
- * Bashar Monologes 2020.m4b: [IPFS link](https://bafybeibduxpkseqg7t4ovrbtpcgj3m4s5psjafjjnf57xgbo72l5zjymfy.ipfs.dweb.link/)
- * Bashar Monologes 2021.m4b: [IPFS link](https://bafybeie4pn5xjt3z3r5lg7h537ydxtwy3lwmm5c5f5dijjeneggidph3xi.ipfs.dweb.link/)
+There are a few sample audiobooks that were created with this tool:
+ * Bashar Monologes: [IPFS link](https://bafybeicqw6tojw25zz2i3hbwucmawidiktlbtlisofcmhnx5vfloayflvy.ipfs.dweb.link/) [Magnet link]()
 
 ## Contribute
 If you like this project, please consider contributing. 
