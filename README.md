@@ -37,7 +37,7 @@ File and chapter selection screens:
 
 ## Compiled audiobooks
 There are a few sample audiobooks that were created with this tool:
- * Bashar Monologes: [IPFS link #1](https://bafybeicqw6tojw25zz2i3hbwucmawidiktlbtlisofcmhnx5vfloayflvy.ipfs.dweb.link/) [IPFS link #2](https://ipfs.io/ipfs/bafybeicqw6tojw25zz2i3hbwucmawidiktlbtlisofcmhnx5vfloayflvy)
+ * Bashar Monologes: [IPFS link #1](https://bafybeicqw6tojw25zz2i3hbwucmawidiktlbtlisofcmhnx5vfloayflvy.ipfs.dweb.link/), [IPFS link #2](https://ipfs.io/ipfs/bafybeicqw6tojw25zz2i3hbwucmawidiktlbtlisofcmhnx5vfloayflvy)
 
 ## Contribute
 If you like this project, please consider contributing. 
