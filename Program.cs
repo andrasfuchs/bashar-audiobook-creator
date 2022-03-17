@@ -258,7 +258,7 @@ namespace BasharTools.AudiobookCreator
                     sb.AppendLine("TIMEBASE=1/1000");
                     sb.AppendLine($"START={(int)(currentPositionInSeconds * 1000)}");
                     sb.AppendLine($"END={(int)((currentPositionInSeconds + audiobookChapterEntry.DurationInSeconds) * 1000)}");
-                    sb.AppendLine($"title={audiobookChapterEntry.Chapter}");
+                    sb.AppendLine($"title={audiobookChapterEntry.Chapter} [{new TimeSpan(0, 0, (int)audiobookChapterEntry.DurationInSeconds)}]");
 
                     currentPositionInSeconds += audiobookChapterEntry.DurationInSeconds;
                 }
