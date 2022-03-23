@@ -92,22 +92,35 @@ namespace BasharTools.AudiobookCreator
 
             Console.CancelKeyPress += Console_CancelKeyPress;
 
-            if (args.Length == 0)
+            if (args.Length <= 1)
             {
-                logger.LogError($"You must define an output file name.");
+                logger.LogError($"You must define an output file name with the --OutputFile <filename.m4b> argument.");
                 return;
             }
 
             if (args.Length > 1)
             {
-                if (args[0] == "--data")
+                for (int i=0; i<args.Length; i++)
                 {
-                    config.DataDirectory = args[1];
-                }
+                    if (args[i].StartsWith("--"))
+                    {
+                        string propertyName = args[i].Substring(2);
+                        string propertyValue = args[i + 1];
 
-                if (args[0] == "--temp")
-                {
-                    config.TempDirectory = args[1];
+                        var property = config.GetType().GetProperties().FirstOrDefault(p => p.Name == propertyName);
+                        if (property != null)
+                        {
+                            property.SetValue(config, propertyValue);
+                        }
+                        else
+                        {
+                            property = config.Metadata.GetType().GetProperties().FirstOrDefault(p => p.Name == propertyName);
+                            if (property != null)
+                            {
+                                property.SetValue(config.Metadata, propertyValue);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -136,10 +149,8 @@ namespace BasharTools.AudiobookCreator
                 return;
             }
 
-            string outputFilename = args[^1];
-
             AudiobookChapterEntry[] audioTimecodes = ReadTimeCodeEntries(config.TimecodesFile);
-            GenerateAudiobook(audioTimecodes, config.DataDirectory, outputFilename);
+            GenerateAudiobook(audioTimecodes, config.DataDirectory, config.OutputFile);
         }
 
         private static AudiobookChapterEntry[] ReadTimeCodeEntries(string timecodeFilename)

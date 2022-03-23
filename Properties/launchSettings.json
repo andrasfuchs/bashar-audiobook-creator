@@ -7,11 +7,15 @@
     },
     "Monologues 2021": {
       "commandName": "Project",
-      "commandLineArgs": "\"Bashar Monologues 2021.m4b\""
+      "commandLineArgs": "--TimecodesFile \"audiobook_timecodes_2021.csv\" --OutputFile \"Bashar Monologues 2021.m4b\" --Title \"Bashar Monologues 2021\" --Year 2021"
     },
     "Monologues 2020": {
       "commandName": "Project",
-      "commandLineArgs": "\"Bashar Monologues 2020.m4b\""
+      "commandLineArgs": "--TimecodesFile \"audiobook_timecodes_2020.csv\" --OutputFile \"Bashar Monologues 2020.m4b\" --Title \"Bashar Monologues 2020\" --Year 2020"
+    },
+    "Monologues 2019": {
+      "commandName": "Project",
+      "commandLineArgs": "--TimecodesFile \"audiobook_timecodes_2019.csv\" --OutputFile \"Bashar Monologues 2019.m4b\" --Title \"Bashar Monologues 2019\" --Year 2019"
     }
   }
 }

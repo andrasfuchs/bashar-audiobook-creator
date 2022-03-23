@@ -10,7 +10,8 @@ namespace BasharTools.AudiobookCreator
         public string DataDirectory { get; internal set; }
         public string TempDirectory { get; internal set; }
         public string[] AudioFileExtensions { get; }
-        public string TimecodesFile { get; }
+        public string TimecodesFile { get; internal set; }
+        public string OutputFile { get; internal set; }
         public FFMPEGConfig FFMPEG { get; }
         public MetadataConfig Metadata { get; }
 
