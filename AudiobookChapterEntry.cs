@@ -20,6 +20,13 @@ namespace BasharTools.AudiobookCreator
                 return (TimeSpan.Parse(StartTime)).TotalSeconds;
             }
         }
+        public double StopTimeInSeconds
+        {
+            get
+            {
+                return (TimeSpan.Parse(StopTime)).TotalSeconds;
+            }
+        }
         public double DurationInSeconds
         {
             get

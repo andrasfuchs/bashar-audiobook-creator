@@ -208,6 +208,8 @@ namespace BasharTools.AudiobookCreator
                     ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%outputfile%", Path.Combine(config.TempDirectory, audiobookChapterEntry.OutputFilename));
                     ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%starttime%", audiobookChapterEntry.StartTime);
                     ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%stoptime%", audiobookChapterEntry.StopTime);
+                    ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%fadeinseconds%", audiobookChapterEntry.StartTimeInSeconds.ToString("0.0", CultureInfo.InvariantCulture.NumberFormat));
+                    ffmpegConversionCommandLine = ffmpegConversionCommandLine.Replace("%fadeoutseconds%", (audiobookChapterEntry.StopTimeInSeconds - 1.0).ToString("0.0", CultureInfo.InvariantCulture.NumberFormat));
 
                     logger.LogDebug($"Running 'ffmpeg {ffmpegConversionCommandLine}'...");
 
