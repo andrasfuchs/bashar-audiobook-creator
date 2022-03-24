@@ -17,21 +17,9 @@ namespace BasharTools.AudiobookCreator
 {
     class Program
     {
-        static string versionString = "v0.2.1 (2022-03-17)";
-
         static ILogger logger;
 
         static Mutex mutex = new Mutex(true, "{8962cf9b-47bf-4a5c-b1fb-5b004cf31c5d}");
-
-        static string[] audioFrameworks = { "dshow", "alsa", "openal", "oss" };
-        static List<string> ffmpegAudioNames = new List<string>();
-
-        static string ffmpegAudioRecordingExtension = "wav";
-        static string ffmpegAudioRecordingParameters = "-c:a pcm_s16le -ac 1 -ar 44100";
-        static string ffmpegAudioEncodingExtension = "mp3";
-        static string ffmpegAudioEncodingParameters = "-c:a mp3 -ac 1 -ar 44100 -q:a 9 -filter:a loudnorm";
-
-        static DriveInfo spaceCheckDrive;
 
         static IConfigurationRoot configuration;
         static AudiobookCreatorConfig config;
@@ -60,6 +48,10 @@ namespace BasharTools.AudiobookCreator
                     });
             });
             logger = loggerFactory.CreateLogger<Program>();
+
+            //VersionHelper vh = new VersionHelper();
+            //string versionString = $"v{vh.GetAssemblyVersion()} ({vh.GetBuildDateTime().ToString("yyyy-MM-dd")})";
+            string versionString = $"v0.2.2 (2022-03-24)";
 
             Console.WriteLine($"Bashar Audiobook Creator {versionString}");
             Console.WriteLine();
