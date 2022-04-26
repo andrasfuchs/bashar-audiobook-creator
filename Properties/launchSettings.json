@@ -16,6 +16,10 @@
     "Monologues 2019": {
       "commandName": "Project",
       "commandLineArgs": "--TimecodesFile \"audiobook_timecodes_2019.csv\" --OutputFile \"Bashar Monologues 2019.m4b\" --Title \"Bashar Monologues 2019\" --Year 2019"
+    },
+    "Monologues 2018": {
+      "commandName": "Project",
+      "commandLineArgs": "--TimecodesFile \"audiobook_timecodes_2018.csv\" --OutputFile \"Bashar Monologues 2018.m4b\" --Title \"Bashar Monologues 2018\" --Year 2018"
     }
   }
 }
